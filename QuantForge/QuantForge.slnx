@@ -3,7 +3,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="QuantForge.CLI/QuantForge.CLI.vcxproj" Id="a147161e-74a7-4e33-aba6-8b41eb8560bc" />
-  <Project Path="QuantForge.Core/QuantForge.Core.vcxproj" Id="6742ff34-bb41-42bd-9883-2bda2709838e" />
-  <Project Path="QuantForge.Tests/QuantForge.Tests.vcxproj" Id="f93b2090-d3d8-4909-bb30-23051712ab84" />
+  <Project Path="QuantForge.CLI/QuantForge.CLI.vcxproj" />
+  <Project Path="QuantForge.Core/QuantForge.Core.vcxproj" />
+  <Project Path="QuantForge.Tests/QuantForge.Tests.vcxproj" />
 </Solution>

@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{a147161e-74a7-4e33-aba6-8b41eb8560bc}</ProjectGuid>
+    <ProjectGuid>{4ACBB5D6-100E-588C-9685-351BBA8D0A6E}</ProjectGuid>
     <RootNamespace>QuantForgeCLI</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
