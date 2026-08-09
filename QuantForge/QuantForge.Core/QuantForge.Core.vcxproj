@@ -160,6 +160,8 @@
     <ClInclude Include="Position.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BlackScholesPricer.cpp" />
+    <ClInclude Include="BlackScholesPricer.h" />
     <ClCompile Include="EuropeanOption.cpp" />
     <ClInclude Include="EuropeanOption.h" />
     <ClCompile Include="Instrument.cpp" />
