@@ -151,6 +151,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BlackScholesContext.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Instrument.h" />
     <ClInclude Include="InstrumentType.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Position.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BlackScholesContext.cpp" />
     <ClCompile Include="BlackScholesPricer.cpp" />
     <ClInclude Include="BlackScholesPricer.h" />
     <ClCompile Include="EuropeanOption.cpp" />

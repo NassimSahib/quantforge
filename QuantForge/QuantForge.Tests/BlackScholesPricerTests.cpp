@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "BlackScholesPricer.h"
+#include "BlackScholesContext.h"
 #include <cmath>
 
 namespace quantforge::pricing
@@ -101,8 +102,25 @@ namespace quantforge::pricing
 		BlackScholesPricer bsp;
 		const double expected = 12.83395226;
 		EXPECT_NEAR(bsp.price(call, marketData), expected, 0.001);
+	}
 
-		
+	TEST(BlackScholesPricerTest, PricesAtTheMoneyCallFromContext) {
+		using namespace quantforge::instruments;
+		using namespace quantforge::market;
+		EuropeanOption call("OPT_AAPL_001", 1.0, 100.0, OptionType::Call);
+		MarketData marketData(100.0, 0.05, 0.0, 0.20);
+		BlackScholesContext context(call,marketData);
+		BlackScholesPricer bsp;
+		EXPECT_NEAR(bsp.price(context), 10.4506, 0.0001);
+	}
 
+	TEST(BlackScholesPricerTest, PricesAtTheMoneyPutFromContext) {
+		using namespace quantforge::instruments;
+		using namespace quantforge::market;
+		EuropeanOption put("OPT_AAPL_001", 1.0, 100.0, OptionType::Put);
+		MarketData marketData(100.0, 0.05, 0.0, 0.20);
+		BlackScholesContext context(put, marketData);
+		BlackScholesPricer bsp;
+		EXPECT_NEAR(bsp.price(context), 5.5735, 0.0001);
 	}
 }
