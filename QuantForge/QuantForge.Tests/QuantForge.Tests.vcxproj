@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlackScholesContextTests.cpp" />
+    <ClCompile Include="BlackScholesGreeksTests.cpp" />
     <ClCompile Include="BlackScholesPricerTests.cpp" />
     <ClCompile Include="EuropeanOptionTests.cpp" />
     <ClCompile Include="MarketDataTests.cpp" />
