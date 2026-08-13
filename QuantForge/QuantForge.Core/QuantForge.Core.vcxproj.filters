@@ -54,6 +54,9 @@
     <ClInclude Include="Portfolio.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="PortfolioAnalytics.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QuantForge.Core.cpp">
@@ -84,6 +87,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Portfolio.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="PortfolioAnalytics.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
