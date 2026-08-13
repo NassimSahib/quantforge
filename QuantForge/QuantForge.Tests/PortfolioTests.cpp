@@ -1,7 +1,5 @@
 #include "pch.h"
 
-#include <utility>
-
 #include "Portfolio.h"
 #include "OptionType.h"
 #include "EuropeanOption.h"
@@ -28,7 +26,7 @@ namespace quantforge::portfolio {
 
 	TEST_F(PortfolioTests, NewPortfolioIsEmpty) {
 		Portfolio portfolio;
-		EXPECT_EQ(portfolio.empty(), true);
+		EXPECT_TRUE(portfolio.empty());
 	}
 	TEST_F(PortfolioTests, AddPositionIncreaseSize) {
 		Portfolio portfolio;
