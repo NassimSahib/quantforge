@@ -104,6 +104,7 @@
     <ClCompile Include="BlackScholesContextTests.cpp" />
     <ClCompile Include="BlackScholesGreeksTests.cpp" />
     <ClCompile Include="BlackScholesPricerTests.cpp" />
+    <ClCompile Include="CsvPortfolioLoaderTests.cpp" />
     <ClCompile Include="EuropeanOptionTests.cpp" />
     <ClCompile Include="MarketDataTests.cpp" />
     <ClCompile Include="pch.cpp">

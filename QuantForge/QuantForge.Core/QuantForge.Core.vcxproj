@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="BlackScholesContext.h" />
     <ClInclude Include="BlackScholesGreeks.h" />
+    <ClInclude Include="CsvPortfolioLoader.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Greeks.h" />
     <ClInclude Include="Instrument.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="BlackScholesGreeks.cpp" />
     <ClCompile Include="BlackScholesPricer.cpp" />
     <ClInclude Include="BlackScholesPricer.h" />
+    <ClCompile Include="CsvPortfolioLoader.cpp" />
     <ClCompile Include="EuropeanOption.cpp" />
     <ClInclude Include="EuropeanOption.h" />
     <ClCompile Include="Instrument.cpp" />
