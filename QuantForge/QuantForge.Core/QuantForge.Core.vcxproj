@@ -159,6 +159,7 @@
     <ClInclude Include="Instrument.h" />
     <ClInclude Include="InstrumentType.h" />
     <ClInclude Include="MarketData.h" />
+    <ClInclude Include="MonteCarloPricer.h" />
     <ClInclude Include="OptionType.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Portfolio.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="EuropeanOption.h" />
     <ClCompile Include="Instrument.cpp" />
     <ClCompile Include="MarketData.cpp" />
+    <ClCompile Include="MonteCarloPricer.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
