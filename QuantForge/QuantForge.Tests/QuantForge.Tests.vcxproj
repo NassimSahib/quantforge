@@ -117,6 +117,7 @@
     <ClCompile Include="PortfolioAnalyticsTests.cpp" />
     <ClCompile Include="PortfolioTests.cpp" />
     <ClCompile Include="PositionTests.cpp" />
+    <ClCompile Include="PricingComparisonTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QuantForge.Core\QuantForge.Core.vcxproj">
