@@ -164,6 +164,8 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Portfolio.h" />
     <ClInclude Include="Position.h" />
+    <ClInclude Include="PricingComparison.h" />
+    <ClInclude Include="PricingComparisonResult.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlackScholesContext.cpp" />
@@ -186,6 +188,7 @@
     <ClInclude Include="PortfolioAnalytics.h" />
     <ClCompile Include="PortfolioAnalytics.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="PricingComparison.cpp" />
     <ClCompile Include="QuantForge.Core.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

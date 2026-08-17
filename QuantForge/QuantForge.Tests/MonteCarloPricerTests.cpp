@@ -78,4 +78,5 @@ namespace quantforge::pricing {
 			bsp.price(putOption, basicMarketData),
 			0.2);
 	}
+
 }
