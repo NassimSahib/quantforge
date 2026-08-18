@@ -115,6 +115,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PortfolioAnalyticsTests.cpp" />
+    <ClCompile Include="PortfolioReportBuilderTests.cpp" />
     <ClCompile Include="PortfolioTests.cpp" />
     <ClCompile Include="PositionTests.cpp" />
     <ClCompile Include="PricingComparisonTests.cpp" />
