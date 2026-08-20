@@ -1,11 +1,24 @@
 // QuantForge.CLI.cpp : Ce fichier contient la fonction 'main'. L'exécution du programme commence et se termine à cet endroit.
 //
 
+
+#include "CliApplication.h"
+
 #include <iostream>
 
-int main()
-{
-    std::cout << "Hello World!\n";
+int main(
+	int argc,
+	const char* argv[]
+) {
+
+	const quantforge::cli::CliApplication app;
+
+	return app.run(
+		argc,
+		argv,
+		std::cout,
+		std::cerr
+	);
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
