@@ -151,6 +151,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BenchmarkStats.h" />
     <ClInclude Include="BlackScholesContext.h" />
     <ClInclude Include="BlackScholesGreeks.h" />
     <ClInclude Include="ConsoleReportWriter.h" />
@@ -168,6 +169,8 @@
     <ClInclude Include="PortfolioReportBuilder.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="PositionPricingResult.h" />
+    <ClInclude Include="PricingBenchmark.h" />
+    <ClInclude Include="PricingBenchmarkResult.h" />
     <ClInclude Include="PricingComparison.h" />
     <ClInclude Include="PricingComparisonResult.h" />
   </ItemGroup>
@@ -194,6 +197,7 @@
     <ClCompile Include="PortfolioAnalytics.cpp" />
     <ClCompile Include="PortfolioReportBuilder.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="PricingBenchmark.cpp" />
     <ClCompile Include="PricingComparison.cpp" />
     <ClCompile Include="QuantForge.Core.cpp" />
   </ItemGroup>

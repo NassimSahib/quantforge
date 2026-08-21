@@ -81,6 +81,15 @@
     <ClInclude Include="ConsoleReportWriter.h">
       <Filter>Fichiers sources</Filter>
     </ClInclude>
+    <ClInclude Include="BenchmarkStats.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="PricingBenchmarkResult.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="PricingBenchmark.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QuantForge.Core.cpp">
@@ -129,6 +138,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleReportWriter.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="PricingBenchmark.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
