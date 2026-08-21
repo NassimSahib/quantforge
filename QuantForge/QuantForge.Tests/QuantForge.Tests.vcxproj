@@ -119,6 +119,7 @@
     <ClCompile Include="PortfolioReportBuilderTests.cpp" />
     <ClCompile Include="PortfolioTests.cpp" />
     <ClCompile Include="PositionTests.cpp" />
+    <ClCompile Include="PricingBenchmarkTests.cpp" />
     <ClCompile Include="PricingComparisonTests.cpp" />
   </ItemGroup>
   <ItemGroup>
