@@ -151,6 +151,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BenchmarkReportWriter.h" />
     <ClInclude Include="BenchmarkStats.h" />
     <ClInclude Include="BlackScholesContext.h" />
     <ClInclude Include="BlackScholesGreeks.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="PricingComparisonResult.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BenchmarkReportWriter.cpp" />
     <ClCompile Include="BlackScholesContext.cpp" />
     <ClCompile Include="BlackScholesGreeks.cpp" />
     <ClCompile Include="BlackScholesPricer.cpp" />
