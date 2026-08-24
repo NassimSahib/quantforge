@@ -1,4 +1,3 @@
-
 #include "CliApplication.h"
 
 #include "CsvPortfolioLoader.h"
@@ -6,11 +5,17 @@
 #include "PortfolioReportBuilder.h"
 #include "ConsoleReportWriter.h"
 
+#include "PricingBenchmark.h"
+#include "BenchmarkReportWriter.h"
+#include "EuropeanOption.h"
+#include "OptionType.h"
+
 #include <cstddef>
 #include <cstdint>
 #include <exception>
 #include <filesystem>
 #include <ostream>
+#include <stdexcept>
 #include <string>
 
 namespace quantforge::cli {
@@ -18,6 +23,7 @@ namespace quantforge::cli {
 	namespace {
 
 		double parseDouble(const std::string& text) {
+
 			std::size_t pos = 0;
 
 			const double value =
@@ -32,7 +38,15 @@ namespace quantforge::cli {
 			return value;
 		}
 
-		std::size_t parsePaths(const std::string& text) {
+
+		std::size_t parseCount(const std::string& text) {
+
+			if (text.empty() || text.front() == '-') {
+				throw std::invalid_argument(
+					"Invalid positive count: " + text
+				);
+			}
+
 			std::size_t pos = 0;
 
 			const unsigned long long value =
@@ -40,14 +54,22 @@ namespace quantforge::cli {
 
 			if (pos != text.size()) {
 				throw std::invalid_argument(
-					"Invalid path count: " + text
+					"Invalid positive count: " + text
 				);
 			}
 
 			return static_cast<std::size_t>(value);
 		}
 
+
 		std::uint64_t parseSeed(const std::string& text) {
+
+			if (text.empty() || text.front() == '-') {
+				throw std::invalid_argument(
+					"Invalid seed: " + text
+				);
+			}
+
 			std::size_t pos = 0;
 
 			const unsigned long long value =
@@ -62,9 +84,13 @@ namespace quantforge::cli {
 			return static_cast<std::uint64_t>(value);
 		}
 
+
 		void printUsage(std::ostream& output) {
+
 			output
-				<< "Usage:\n"
+				<< "Usage:\n\n"
+
+				<< "Portfolio pricing:\n"
 				<< "QuantForge.CLI "
 				<< "<portfolio.csv> "
 				<< "<spot> "
@@ -72,6 +98,13 @@ namespace quantforge::cli {
 				<< "<dividendYield> "
 				<< "<volatility> "
 				<< "<paths> "
+				<< "<seed>\n\n"
+
+				<< "Benchmark:\n"
+				<< "QuantForge.CLI benchmark "
+				<< "<bsIterations> "
+				<< "<mcIterations> "
+				<< "<mcPaths> "
 				<< "<seed>\n";
 		}
 
@@ -85,12 +118,93 @@ namespace quantforge::cli {
 		std::ostream& error
 	) const {
 
-		if (argc != 8) {
-			printUsage(error);
-			return 1;
-		}
-
 		try {
+
+			// ------------------------------------------------
+			// BENCHMARK MODE
+			// ------------------------------------------------
+
+			if (
+				argc >= 2
+				&& std::string{ argv[1] } == "benchmark"
+				) {
+
+				if (argc != 6) {
+					printUsage(error);
+					return 1;
+				}
+
+				const std::size_t blackScholesIterations =
+					parseCount(argv[2]);
+
+				const std::size_t monteCarloIterations =
+					parseCount(argv[3]);
+
+				const std::size_t monteCarloPaths =
+					parseCount(argv[4]);
+
+				const std::uint64_t seed =
+					parseSeed(argv[5]);
+
+
+				// Fixed benchmark scenario.
+				//
+				// Keeping the financial inputs constant makes
+				// performance comparisons between versions meaningful.
+
+				const quantforge::instruments::EuropeanOption option{
+					"BENCH_CALL",
+					1.0,
+					100.0,
+					quantforge::instruments::OptionType::Call
+				};
+
+				const quantforge::market::MarketData marketData{
+					120.0,
+					0.05,
+					0.02,
+					0.20
+				};
+
+
+				quantforge::benchmarking::PricingBenchmark benchmark;
+
+				const quantforge::benchmarking::PricingBenchmarkResult result =
+					benchmark.run(
+						option,
+						marketData,
+						blackScholesIterations,
+						monteCarloIterations,
+						monteCarloPaths,
+						seed
+					);
+
+
+				output
+					<< "Scenario: European Call\n"
+					<< "S=120, K=100, T=1, r=0.05, q=0.02, sigma=0.20\n\n";
+
+
+				quantforge::reporting::BenchmarkReportWriter writer;
+
+				writer.write(
+					result,
+					output
+				);
+
+				return 0;
+			}
+
+
+			// ------------------------------------------------
+			// PORTFOLIO MODE
+			// ------------------------------------------------
+
+			if (argc != 8) {
+				printUsage(error);
+				return 1;
+			}
+
 
 			const std::filesystem::path portfolioPath{
 				argv[1]
@@ -109,10 +223,11 @@ namespace quantforge::cli {
 				parseDouble(argv[5]);
 
 			const std::size_t paths =
-				parsePaths(argv[6]);
+				parseCount(argv[6]);
 
 			const std::uint64_t seed =
 				parseSeed(argv[7]);
+
 
 			const quantforge::market::MarketData marketData{
 				spot,
@@ -121,10 +236,12 @@ namespace quantforge::cli {
 				volatility
 			};
 
+
 			quantforge::io::CsvPortfolioLoader loader;
 
 			const quantforge::portfolio::Portfolio portfolio =
 				loader.load(portfolioPath);
+
 
 			quantforge::portfolio::PortfolioReportBuilder builder;
 
@@ -135,6 +252,7 @@ namespace quantforge::cli {
 					paths,
 					seed
 				);
+
 
 			quantforge::reporting::ConsoleReportWriter writer;
 
