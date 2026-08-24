@@ -163,6 +163,10 @@
     <ClInclude Include="InstrumentType.h" />
     <ClInclude Include="MarketData.h" />
     <ClInclude Include="MonteCarloPricer.h" />
+    <ClInclude Include="MonteCarloScalingBenchmark.h" />
+    <ClInclude Include="MonteCarloScalingBenchmarkResult.h" />
+    <ClInclude Include="MonteCarloScalingEntry.h" />
+    <ClInclude Include="MonteCarloScalingReportWriter.h" />
     <ClInclude Include="OptionType.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Portfolio.h" />
@@ -188,6 +192,10 @@
     <ClCompile Include="Instrument.cpp" />
     <ClCompile Include="MarketData.cpp" />
     <ClCompile Include="MonteCarloPricer.cpp" />
+    <ClInclude Include="ParallelMonteCarloPricer.h" />
+    <ClCompile Include="MonteCarloScalingBenchmark.cpp" />
+    <ClCompile Include="MonteCarloScalingReportWriter.cpp" />
+    <ClCompile Include="ParallelMonteCarloPricer.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -7,6 +7,10 @@
 
 #include "PricingBenchmark.h"
 #include "BenchmarkReportWriter.h"
+
+#include "MonteCarloScalingBenchmark.h"
+#include "MonteCarloScalingReportWriter.h"
+
 #include "EuropeanOption.h"
 #include "OptionType.h"
 
@@ -100,11 +104,17 @@ namespace quantforge::cli {
 				<< "<paths> "
 				<< "<seed>\n\n"
 
-				<< "Benchmark:\n"
+				<< "Pricing benchmark:\n"
 				<< "QuantForge.CLI benchmark "
 				<< "<bsIterations> "
 				<< "<mcIterations> "
 				<< "<mcPaths> "
+				<< "<seed>\n\n"
+
+				<< "Monte-Carlo scaling benchmark:\n"
+				<< "QuantForge.CLI scaling "
+				<< "<iterations> "
+				<< "<paths> "
 				<< "<seed>\n";
 		}
 
@@ -121,7 +131,78 @@ namespace quantforge::cli {
 		try {
 
 			// ------------------------------------------------
-			// BENCHMARK MODE
+			// MONTE-CARLO SCALING MODE
+			// ------------------------------------------------
+
+			if (
+				argc >= 2
+				&& std::string{ argv[1] } == "scaling"
+				) {
+
+				if (argc != 5) {
+					printUsage(error);
+					return 1;
+				}
+
+				const std::size_t iterations =
+					parseCount(argv[2]);
+
+				const std::size_t paths =
+					parseCount(argv[3]);
+
+				const std::uint64_t seed =
+					parseSeed(argv[4]);
+
+
+				// Fixed financial scenario so benchmark results
+				// remain comparable between versions.
+
+				const quantforge::instruments::EuropeanOption option{
+					"BENCH_CALL",
+					1.0,
+					100.0,
+					quantforge::instruments::OptionType::Call
+				};
+
+				const quantforge::market::MarketData marketData{
+					120.0,
+					0.05,
+					0.02,
+					0.20
+				};
+
+
+				quantforge::benchmarking::MonteCarloScalingBenchmark benchmark;
+
+				const quantforge::benchmarking::MonteCarloScalingBenchmarkResult result =
+					benchmark.run(
+						option,
+						marketData,
+						iterations,
+						paths,
+						seed
+					);
+
+
+				output
+					<< "Scenario: European Call\n"
+					<< "S=120, K=100, T=1, "
+					<< "r=0.05, q=0.02, sigma=0.20\n\n";
+
+
+				quantforge::reporting::MonteCarloScalingReportWriter writer;
+
+				writer.write(
+					result,
+					output
+				);
+
+				return 0;
+			}
+
+
+			// ------------------------------------------------
+			// PRICING BENCHMARK MODE
 			// ------------------------------------------------
 
 			if (
@@ -148,9 +229,6 @@ namespace quantforge::cli {
 
 
 				// Fixed benchmark scenario.
-				//
-				// Keeping the financial inputs constant makes
-				// performance comparisons between versions meaningful.
 
 				const quantforge::instruments::EuropeanOption option{
 					"BENCH_CALL",
@@ -182,7 +260,8 @@ namespace quantforge::cli {
 
 				output
 					<< "Scenario: European Call\n"
-					<< "S=120, K=100, T=1, r=0.05, q=0.02, sigma=0.20\n\n";
+					<< "S=120, K=100, T=1, "
+					<< "r=0.05, q=0.02, sigma=0.20\n\n";
 
 
 				quantforge::reporting::BenchmarkReportWriter writer;
@@ -197,7 +276,7 @@ namespace quantforge::cli {
 
 
 			// ------------------------------------------------
-			// PORTFOLIO MODE
+			// PORTFOLIO PRICING MODE
 			// ------------------------------------------------
 
 			if (argc != 8) {
@@ -263,6 +342,7 @@ namespace quantforge::cli {
 
 			return 0;
 		}
+
 		catch (const std::exception& exception) {
 
 			error
