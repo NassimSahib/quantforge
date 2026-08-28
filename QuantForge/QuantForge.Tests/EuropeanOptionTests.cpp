@@ -132,10 +132,5 @@ namespace quantforge::instruments
 		EXPECT_DOUBLE_EQ(base->payoff(130.0), 30.0);
 		EXPECT_EQ(base->instrumentType(), InstrumentType::EuropeanOption);
 	}
-
-
-
-
-
 }
 

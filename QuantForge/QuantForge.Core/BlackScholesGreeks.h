@@ -7,7 +7,7 @@ namespace quantforge::pricing {
 
 	class BlackScholesGreeks {
 	public:
-
 		Greeks calculate(const BlackScholesContext& context) const;
 	};
 }
+

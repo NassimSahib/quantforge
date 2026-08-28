@@ -21,5 +21,4 @@ namespace quantforge::benchmarking {
 
 		std::vector<MonteCarloScalingEntry> parallelResults{};
 	};
-
 }

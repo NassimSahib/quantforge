@@ -121,6 +121,4 @@ namespace quantforge::portfolio {
 			bsg.calculate(contextCall).rho * callPos.quantity()
 		    + bsg.calculate(contextPut).rho * putPos.quantity());
 	}
-
-
 }

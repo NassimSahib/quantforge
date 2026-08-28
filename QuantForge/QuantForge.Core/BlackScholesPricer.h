@@ -13,6 +13,4 @@ namespace quantforge::pricing
 
 		double price(const BlackScholesContext& context) const;
 	};
-
-	
 }
