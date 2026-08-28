@@ -7,7 +7,7 @@
 namespace quantforge::market {
 
 	TEST(MarketDataTest, ConstructWithValidValues) {
-		MarketData md(100.0,0.03, 0.01,0.20);
+		MarketData md(100.0, 0.03, 0.01, 0.20);
 		EXPECT_DOUBLE_EQ(md.spot(), 100.0);
 		EXPECT_DOUBLE_EQ(md.riskFreeRate(), 0.03);
 		EXPECT_DOUBLE_EQ(md.dividendYield(), 0.01);

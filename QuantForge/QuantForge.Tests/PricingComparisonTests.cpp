@@ -131,7 +131,6 @@ namespace quantforge::pricing {
 		);
 	}
 
-
 	TEST_F(PricingComparisonTest, ZeroBlackScholesPriceHasNoRelativeError) {
 		PricingComparison pc;
 

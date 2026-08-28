@@ -10,5 +10,4 @@ namespace quantforge::benchmarking {
 		std::chrono::nanoseconds totalTime{};
 		double averageNanoseconds{};
 	};
-
 }

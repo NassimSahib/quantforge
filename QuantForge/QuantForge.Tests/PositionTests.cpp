@@ -40,7 +40,7 @@ namespace quantforge::portfolio {
 
 	TEST(PositionTest, RejectsNullInstrument) {
 		using namespace quantforge::instruments;
-		std::shared_ptr<EuropeanOption> instrument =nullptr;
+		std::shared_ptr<EuropeanOption> instrument = nullptr;
 		EXPECT_THROW(Position pos(instrument, 30),
 			         std::invalid_argument);
 	}

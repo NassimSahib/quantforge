@@ -101,8 +101,6 @@ namespace quantforge::io {
 			};
 
 			portfolio.addPosition(position);
-			
-
 		}
 
 		return portfolio;
