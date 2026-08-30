@@ -1,32 +1,44 @@
 # QuantForge
 
-**QuantForge** is a C++20 mini options desk built to practice quantitative finance, modern C++, testing, performance engineering, and multithreading in one coherent project.
+[![CI](https://github.com/NassimSahib/quantforge/actions/workflows/ci.yml/badge.svg)](https://github.com/NassimSahib/quantforge/actions/workflows/ci.yml)
 
-It prices and analyzes portfolios of European options from CSV input using both **Black-Scholes** and **Monte Carlo**, computes portfolio Greeks, compares pricing methods, reports execution times, and includes a multithreaded Monte Carlo implementation with scaling benchmarks.
+**QuantForge** is a cross-platform C++20 quantitative finance project for pricing and analyzing portfolios of European options.
 
-> **Project status:** pre-v1.0. The current codebase is validated on Windows x64 with MSVC. CMake, Linux/GCC support, and CI are the next milestones before the v1.0 tag.
+It combines financial modelling, modern C++, testing, performance engineering, and multithreading in one coherent codebase. QuantForge supports analytical **Black-Scholes pricing**, **Greeks**, sequential and parallel **Monte Carlo simulation**, portfolio aggregation, CSV ingestion, benchmarking, and automated cross-platform validation.
+
+> **Project status:** v1.0 release candidate. The codebase builds and passes its full test suite on **Windows/MSVC** and **Linux/GCC** through CMake and GitHub Actions.
+
+---
 
 ## Highlights
 
 - European **Call / Put** instruments
-- Validated market data
+- Validated market-data domain objects
 - Analytical **Black-Scholes pricing**
 - Analytical **Delta, Gamma, Vega, Theta, Rho**
-- Sequential Monte Carlo pricing under risk-neutral GBM
+- Sequential Monte Carlo under risk-neutral GBM
+- Parallel Monte Carlo using `std::jthread`
 - Deterministic RNG through explicit seeds
-- Portfolio positions with long/short quantities
+- Long / short portfolio positions
 - CSV portfolio ingestion
-- Portfolio-level valuation and Greeks aggregation
+- Portfolio valuation and Greeks aggregation
 - Black-Scholes vs Monte Carlo comparison
 - Console reporting
-- Release-mode benchmarking
-- Parallel Monte Carlo with `std::jthread`
-- Automatic scaling tests using `std::thread::hardware_concurrency()`
-- GoogleTest coverage across pricing, parsing, reporting, portfolio logic, and concurrency
+- Release-mode performance benchmarks
+- Monte Carlo scaling benchmarks
+- CMake cross-platform build system
+- Windows / MSVC support
+- Linux / GCC support
+- **141 GoogleTest tests**
+- GitHub Actions CI on Windows and Ubuntu
+
+---
 
 ## Performance snapshot
 
-Measured on the development machine in **Release x64**.
+Benchmarks below were measured on the development machine in optimized **Release** builds.
+
+Results are machine-, compiler-, operating-system-, and workload-dependent and should not be interpreted as universal performance claims.
 
 ### Pricing benchmark
 
@@ -36,22 +48,51 @@ Scenario:
 European Call
 S = 120
 K = 100
-T = 1
+T = 1 year
 r = 5%
 q = 2%
 sigma = 20%
 ```
+
+#### Windows / MSVC
 
 | Engine | Workload | Average time | Throughput |
 |---|---:|---:|---:|
 | Black-Scholes | 1,000,000 prices | **57.54 ns / price** | — |
 | Monte Carlo | 100,000 paths / price | **2.60 ms / price** | **38.44 M paths/s** |
 
-In that run, Monte Carlo was about **45,206x** slower per option price than the closed-form Black-Scholes calculation, illustrating the cost difference between an analytical solution and simulation.
+Observed Monte Carlo / Black-Scholes runtime ratio:
 
-### Parallel Monte Carlo scaling
+```text
+~45,206x
+```
 
-Scaling benchmark: **1,000,000 paths per price**, 5 iterations.
+This illustrates the computational difference between evaluating a closed-form solution and generating a large Monte Carlo sample for each price.
+
+#### Linux / GCC under WSL2
+
+Same pricing scenario and workload:
+
+| Engine | Average time | Throughput |
+|---|---:|---:|
+| Black-Scholes | **448.72 ns / price** | — |
+| Monte Carlo | **8.08 ms / price** | **12.38 M paths/s** |
+
+The sequential implementation was faster in the measured Windows/MSVC environment, while the parallel implementation exhibited substantially stronger scaling under Linux/GCC.
+
+---
+
+## Parallel Monte Carlo scaling
+
+Each price uses:
+
+```text
+1,000,000 Monte Carlo paths
+```
+
+### Windows / MSVC
+
+5 iterations per configuration.
 
 | Workers | Avg. time / price | Throughput | Speedup vs sequential |
 |---:|---:|---:|---:|
@@ -62,9 +103,44 @@ Scaling benchmark: **1,000,000 paths per price**, 5 iterations.
 | **8** | **9.87 ms** | **101.32 M paths/s** | **4.63x** |
 | 16 | 11.13 ms | 89.84 M paths/s | 4.10x |
 
-The best observed configuration was **8 workers**, reaching more than **101 million Monte Carlo paths per second** and a **4.63x speedup** over the sequential baseline in the same scaling run.
+Best observed Windows configuration:
 
-> Benchmark results are machine- and workload-dependent. They are included as reproducible project measurements, not universal performance claims. See [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md).
+```text
+8 workers
+9.87 ms / price
+101.32 M paths/s
+4.63x speedup
+```
+
+### Linux / GCC under WSL2
+
+20 iterations per configuration.
+
+| Workers | Avg. time / price | Throughput | Speedup vs sequential |
+|---:|---:|---:|---:|
+| Sequential | 106.76 ms | 9.37 M paths/s | 1.00x |
+| 1 | 108.70 ms | 9.20 M paths/s | 0.98x |
+| 2 | 61.66 ms | 16.22 M paths/s | 1.73x |
+| 4 | 30.45 ms | 32.84 M paths/s | 3.51x |
+| 8 | 13.94 ms | 71.73 M paths/s | 7.66x |
+| **16** | **7.35 ms** | **136.09 M paths/s** | **14.53x** |
+
+Best observed Linux/WSL2 configuration:
+
+```text
+16 workers
+7.35 ms / price
+136.09 M paths/s
+14.53x speedup
+```
+
+The same C++ implementation therefore showed significantly different scaling characteristics across the two measured environments.
+
+On Windows/MSVC, performance peaked at 8 workers. Under WSL2/GCC, scaling continued through 16 workers and reached approximately **136 million paths per second**.
+
+> See [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) for benchmark methodology and interpretation.
+
+---
 
 ## Architecture
 
@@ -96,28 +172,32 @@ BlackScholesPricer      MonteCarloPricer
 PortfolioAnalytics   ConsoleReportWriter
         |
         v
-     Greeks
+      Greeks
 ```
 
-The multithreaded path is kept separate from the sequential implementation:
+The multithreaded Monte Carlo implementation is kept separate from the sequential baseline:
 
 ```text
 MonteCarloPricer
     |
-    +--> sequential baseline
+    +--> sequential reference implementation
 
 ParallelMonteCarloPricer
     |
     +--> path partitioning
     +--> worker-local RNG
-    +--> local payoff sums
-    +--> join
-    +--> reduction
+    +--> worker-local payoff accumulation
+    +--> std::jthread lifetime / join
+    +--> partial-sum reduction
 ```
+
+Each worker writes to its own partial result, avoiding a shared payoff accumulator and mutex contention in the simulation hot loop.
 
 More detail: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-## Pricing
+---
+
+## Pricing models
 
 ### Black-Scholes
 
@@ -139,11 +219,19 @@ d_1 =
 {\sigma\sqrt{T}}
 \]
 
+and
+
 \[
 d_2 = d_1 - \sigma\sqrt{T}
 \]
 
+`BlackScholesContext` precomputes quantities shared between pricing and Greeks, including discount factors, \(d_1\), \(d_2\), normal CDF values, and the normal PDF.
+
+---
+
 ### Monte Carlo
+
+Terminal prices are simulated directly under the risk-neutral geometric Brownian motion model:
 
 \[
 S_T =
@@ -155,9 +243,13 @@ S_0 \exp
 \right]
 \]
 
-with \(Z \sim \mathcal{N}(0,1)\).
+where
 
-The option value is estimated as:
+\[
+Z \sim \mathcal{N}(0,1)
+\]
+
+The discounted Monte Carlo estimator is:
 
 \[
 V_0 \approx
@@ -167,7 +259,51 @@ e^{-rT}
 \text{Payoff}(S_T^{(i)})
 \]
 
+The implementation uses:
+
+```text
+std::mt19937_64
+std::normal_distribution<double>
+explicit deterministic seeds
+```
+
+---
+
+## Greeks
+
+QuantForge computes analytical Black-Scholes:
+
+- Delta
+- Gamma
+- Vega
+- Theta
+- Rho
+
+Risk is aggregated at portfolio level using signed position quantities.
+
+---
+
+## Portfolio model
+
+A portfolio consists of signed `Position` objects referencing immutable instruments.
+
+```text
+quantity > 0  -> long position
+quantity < 0  -> short position
+```
+
+Instrument direction and position direction remain separate concepts:
+
+```text
+Call / Put   -> payoff type
+Long / Short -> portfolio exposure
+```
+
+---
+
 ## CLI
+
+QuantForge provides three execution modes.
 
 ### Portfolio pricing
 
@@ -178,8 +314,20 @@ QuantForge.CLI <portfolio.csv> <spot> <riskFreeRate> <dividendYield> <volatility
 Example:
 
 ```text
-QuantForge.CLI portfolio.csv 120 0.05 0.02 0.20 100000 42
+QuantForge.CLI examples/portfolio.csv 120 0.05 0.02 0.20 100000 42
 ```
+
+The report includes:
+
+- unit Black-Scholes prices
+- unit Monte Carlo prices
+- absolute and relative pricing errors
+- position values
+- portfolio totals
+- portfolio Greeks
+- execution timings
+
+---
 
 ### Pricing benchmark
 
@@ -193,6 +341,8 @@ Example:
 QuantForge.CLI benchmark 1000000 10 100000 42
 ```
 
+---
+
 ### Monte Carlo scaling benchmark
 
 ```text
@@ -202,12 +352,22 @@ QuantForge.CLI scaling <iterations> <paths> <seed>
 Example:
 
 ```text
-QuantForge.CLI scaling 5 1000000 42
+QuantForge.CLI scaling 20 1000000 42
 ```
 
 Full usage details: [`docs/USAGE.md`](docs/USAGE.md).
 
+---
+
 ## CSV format
+
+Required header:
+
+```csv
+id,type,option_type,strike,maturity,quantity
+```
+
+Example:
 
 ```csv
 id,type,option_type,strike,maturity,quantity
@@ -216,50 +376,201 @@ PUT_001,EUROPEAN_OPTION,PUT,110,0.5,-3
 CALL_002,EUROPEAN_OPTION,CALL,130,2.0,5
 ```
 
-The CSV describes the **portfolio**. Market conditions are supplied separately to the CLI, allowing the same portfolio to be revalued under different market scenarios.
+The CSV describes the **portfolio**, while market conditions are supplied separately.
+
+This allows the same portfolio to be revalued under different market scenarios without modifying its instrument definitions.
+
+---
+
+## Build
+
+QuantForge uses **CMake** and requires a C++20 compiler.
+
+### Linux / GCC
+
+```bash
+git clone https://github.com/NassimSahib/quantforge.git
+cd quantforge
+
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+```
+
+Run the CLI:
+
+```bash
+./build/QuantForge.CLI/QuantForge.CLI benchmark 1000000 10 100000 42
+```
+
+---
+
+### Windows / MSVC
+
+From a Visual Studio Developer PowerShell:
+
+```powershell
+git clone https://github.com/NassimSahib/quantforge.git
+cd quantforge
+
+cmake -S . -B build
+cmake --build build --config Release --parallel
+ctest --test-dir build -C Release --output-on-failure
+```
+
+The native Visual Studio solution is also kept in the repository:
+
+```text
+QuantForge.slnx
+```
+
+---
 
 ## Tests
 
-The project uses **GoogleTest**.
+QuantForge currently contains **141 GoogleTest tests**.
 
-Coverage includes market-data invariants, option validation and payoffs, Black-Scholes, Greeks, Monte Carlo reproducibility, CSV parsing, portfolio aggregation, reporting, benchmarking, parallel Monte Carlo, and scaling behavior.
+Coverage includes:
+
+- market-data invariants
+- instrument validation
+- European Call / Put payoffs
+- positions and portfolios
+- Black-Scholes context
+- Black-Scholes pricing
+- analytical Greeks
+- zero-volatility edge cases
+- Monte Carlo reproducibility
+- Monte Carlo vs Black-Scholes consistency
+- portfolio aggregation
+- strict CSV parsing
+- pricing comparison
+- report generation
+- benchmark result generation
+- parallel Monte Carlo
+- worker partitioning
+- Monte Carlo scaling behavior
+
+CTest integration allows the complete suite to be executed with:
+
+```bash
+ctest --test-dir build --output-on-failure
+```
 
 See [`docs/TESTING.md`](docs/TESTING.md).
 
-## Current build environment
+---
 
-Validated:
+## Continuous Integration
 
-- C++20
-- Visual Studio / MSVC
-- Windows x64
-- Debug and Release
-- GoogleTest
+Every Pull Request to `main` and every push to `main` is automatically validated using **GitHub Actions**.
 
-### Next before v1.0
+The CI pipeline builds QuantForge and executes the complete test suite on:
 
-- CMake
-- Linux / GCC build
-- GitHub Actions CI
-- clean build-from-clone instructions
+```text
+Ubuntu / GCC
+Windows / MSVC
+```
 
-After those milestones, the project will be tagged **v1.0**.
+Pipeline:
+
+```text
+Pull Request / Push
+        |
+        +-------------------+
+        |                   |
+        v                   v
+ Ubuntu / GCC         Windows / MSVC
+        |                   |
+      CMake               CMake
+        |                   |
+      Build               Build
+        |                   |
+     141 tests           141 tests
+        |                   |
+        +---------+---------+
+                  |
+                  v
+                 PASS
+```
+
+Performance benchmarks are intentionally excluded from CI pass/fail requirements because shared CI runners do not provide stable benchmarking environments.
+
+---
+
+## Repository structure
+
+```text
+quantforge/
+|
++-- .github/
+|   +-- workflows/
+|       +-- ci.yml
+|
++-- docs/
+|   +-- ARCHITECTURE.md
+|   +-- PERFORMANCE.md
+|   +-- TESTING.md
+|   +-- USAGE.md
+|
++-- examples/
+|   +-- portfolio.csv
+|
++-- QuantForge.Core/
+|   +-- CMakeLists.txt
+|   +-- pricing / portfolio / reporting / benchmarking source
+|
++-- QuantForge.CLI/
+|   +-- CMakeLists.txt
+|   +-- CliApplication
+|   +-- main
+|
++-- QuantForge.Tests/
+|   +-- CMakeLists.txt
+|   +-- GoogleTest suite
+|
++-- CMakeLists.txt
++-- QuantForge.slnx
++-- README.md
+```
+
+---
+
+## Toolchain
+
+Validated environments:
+
+| Platform | Compiler | Build system | Tests |
+|---|---|---|---|
+| Windows | MSVC | CMake | 141/141 |
+| Linux / Ubuntu | GCC | CMake | 141/141 |
+
+The Linux build has been validated both locally under WSL2 and independently through GitHub Actions on Ubuntu.
+
+---
 
 ## Roadmap after v1.0
 
-Possible extensions:
+Potential extensions include:
 
 - antithetic variates
 - control variates
-- confidence intervals
+- Monte Carlo confidence intervals
 - persistent thread pool
 - quasi-Monte Carlo
-- implied volatility solver
+- implied-volatility solver
 - yield curves
+- additional pricing engines
 - American / exotic options
 
-The project intentionally stops before becoming an open-ended pricing framework: the goal is a compact, explainable, testable C++ quant-dev portfolio project.
+These are intentionally kept outside the initial V1 scope.
+
+QuantForge is designed to remain a compact project whose architecture, financial assumptions, correctness tests, and performance behavior can all be explained end-to-end.
+
+---
 
 ## Disclaimer
 
-QuantForge is an educational and portfolio project. It is not intended for production trading, investment advice, or live risk management.
+QuantForge is an educational and portfolio project.
+
+It is not intended for production trading, investment advice, or live financial risk management.
