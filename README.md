@@ -144,35 +144,23 @@ On Windows/MSVC, performance peaked at 8 workers. Under WSL2/GCC, scaling contin
 
 ## Architecture
 
-```text
-CSV portfolio
-     |
-     v
-CsvPortfolioLoader
-     |
-     v
-Portfolio + MarketData
-     |
-     +------------------------+
-     |                        |
-     v                        v
-BlackScholesPricer      MonteCarloPricer
-     |                        |
-     +-----------+------------+
-                 |
-                 v
-         PricingComparison
-                 |
-                 v
-       PortfolioReportBuilder
-                 |
-        +--------+--------+
-        |                 |
-        v                 v
-PortfolioAnalytics   ConsoleReportWriter
-        |
-        v
-      Greeks
+```mermaid
+flowchart LR
+    CSV["Portfolio CSV"] --> Loader["CsvPortfolioLoader"]
+    Loader --> Portfolio["Portfolio"]
+    Market["MarketData"] --> BS["BlackScholesPricer"]
+    Market --> MC["MonteCarloPricer"]
+
+    Portfolio --> Comparison["PricingComparison"]
+    BS --> Comparison
+    MC --> Comparison
+
+    Comparison --> Builder["PortfolioReportBuilder"]
+    Portfolio --> Analytics["PortfolioAnalytics"]
+
+    Analytics --> Builder
+    Builder --> Report["PortfolioReport"]
+    Report --> Console["ConsoleReportWriter"]
 ```
 
 The multithreaded Monte Carlo implementation is kept separate from the sequential baseline:
