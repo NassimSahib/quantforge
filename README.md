@@ -6,7 +6,7 @@
 
 It combines financial modelling, modern C++, testing, performance engineering, and multithreading in one coherent codebase. QuantForge supports analytical **Black-Scholes pricing**, **Greeks**, sequential and parallel **Monte Carlo simulation**, portfolio aggregation, CSV ingestion, benchmarking, and automated cross-platform validation.
 
-> **Project status:** v1.0 release candidate. The codebase builds and passes its full test suite on **Windows/MSVC** and **Linux/GCC** through CMake and GitHub Actions.
+> **Project status:** v1.0 — stable first release. The codebase builds and passes its full test suite on **Windows/MSVC** and **Linux/GCC** through CMake and GitHub Actions.
 
 ---
 
