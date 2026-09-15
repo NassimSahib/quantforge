@@ -24,8 +24,11 @@ namespace quantforge::instruments {
 	TEST_F(AsianOptionTest, CorrectPayoff) {
 		EXPECT_NEAR(ao.payoff(monitoringPrices), 106.36 - ao.strike(), 0.01);
 	}
+<<<<<<< HEAD
 
 	TEST_F(AsianOptionTest, ReturnsCorrectInstrumentType) {
 		EXPECT_EQ(ao.instrumentType(), InstrumentType::AsianOption);
 	}
+=======
+>>>>>>> 27459080dc3c10ca19bb1b392232e622b04fddc7
 }

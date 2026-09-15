@@ -211,6 +211,9 @@
     <ClCompile Include="PricingComparison.cpp" />
     <ClCompile Include="QuantForge.Core.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -9,7 +9,6 @@ namespace quantforge::instruments {
 		double maturity_;
 	public:
 		virtual ~Instrument() = default;
-		virtual double payoff(double terminalSpot) const = 0;
 		virtual InstrumentType instrumentType() const = 0;
 
 		const std::string& id() const;
