@@ -10,7 +10,7 @@ namespace quantforge::instruments {
 		double maturity,
 		double strike,
 		OptionType optionType)
-		: Instrument(std::move(id), maturity),
+		: TerminalDependentInstrument(std::move(id), maturity),
 		  strike_(strike), 
 		  optionType_(optionType)
 	{

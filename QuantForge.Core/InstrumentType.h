@@ -3,5 +3,6 @@
 namespace quantforge::instruments{
 	enum class InstrumentType {
 		EuropeanOption,
+		AsianOption
 	};
 }
