@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Instrument.h"
-
+#include <cstdint>
 #include <vector>
 
 namespace quantforge::instruments {
