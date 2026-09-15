@@ -128,7 +128,7 @@ namespace quantforge::instruments
 
 	TEST(EuropeanOptionTest, SupportsPolymorphicPayoffThroughInstrument) {
 		EuropeanOption eo("OPT_AAPL_001", 1.0, 100.0, OptionType::Call);
-		Instrument* base = &eo;
+		TerminalDependentInstrument* base = &eo;
 		EXPECT_DOUBLE_EQ(base->payoff(130.0), 30.0);
 		EXPECT_EQ(base->instrumentType(), InstrumentType::EuropeanOption);
 	}

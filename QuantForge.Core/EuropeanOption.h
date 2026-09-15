@@ -1,10 +1,11 @@
 #pragma once
 #include "Instrument.h"
+#include "TerminalDependentInstrument.h"
 #include "OptionType.h"
 
 namespace quantforge::instruments {
 
-	class EuropeanOption final: public Instrument {
+	class EuropeanOption final: public TerminalDependentInstrument {
 	private:
 		double strike_;
 		OptionType optionType_;
