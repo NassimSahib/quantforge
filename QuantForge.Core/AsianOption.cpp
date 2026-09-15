@@ -1,18 +1,12 @@
 #include "pch.h"
 #include "AsianOption.h"
-<<<<<<< HEAD
 #include "OptionType.h"
-=======
->>>>>>> 27459080dc3c10ca19bb1b392232e622b04fddc7
 
 #include <utility>
 #include <stdexcept>
 #include <cmath>
 #include <algorithm>
-<<<<<<< HEAD
-=======
 #include <string>
->>>>>>> 27459080dc3c10ca19bb1b392232e622b04fddc7
 #include <numeric>
 
 
