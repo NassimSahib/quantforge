@@ -15,6 +15,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(
     QuantForge.Tests
 
+    AsianMonteCarloPricerTests.cpp
     AsianOptionTests.cpp
     BenchmarkReportWriterTests.cpp
     BlackScholesContextTests.cpp

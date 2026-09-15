@@ -3,6 +3,7 @@ add_library(QuantForge.Core STATIC)
 target_sources(
     QuantForge.Core
     PRIVATE
+        AsianMonteCarloPricer.cpp
         AsianOption.cpp
         BenchmarkReportWriter.cpp
         BlackScholesContext.cpp
